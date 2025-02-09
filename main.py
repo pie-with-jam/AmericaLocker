@@ -276,20 +276,20 @@ def main():
 
     # Большой текст с пустыми строками для разделения на блоки
     big_text = """Your computer is locked due to your active involvement in 
-    interfering with the 2024 U.S. elections. You voted 37 times for 
-    Trump, 12 times for Biden, and once for Morris the cat from the 
-    neighboring apartment. Evidence includes an attempt to hack the 
-    election system through Minecraft from your IP address, spreading 
-    memes with fake election results on TikTok, and commenting "Trump 2028" 
-    on Biden's Instagram post.
+interfering with the 2024 U.S. elections. You voted 37 times for 
+Trump, 12 times for Biden, and once for Morris the cat from the 
+neighboring apartment. Evidence includes an attempt to hack the 
+election system through Minecraft from your IP address, spreading 
+memes with fake election results on TikTok, and commenting "Trump 2028" 
+on Biden's Instagram post.
 
-    To unlock your computer, write to @UNBLOCK_COMPUTER on Telegram, confess 
-    everything, send a photo of your favorite mug with the inscription "Make America Great Again" 
-    or "I Voted for Biden (No Regrets)," and write: "I will no longer interfere in elections. 
-    I promise to vote only once next time. Or twice. Maximum three."
+To unlock your computer, write to @UNBLOCK_COMPUTER on Telegram, confess 
+everything, send a photo of your favorite mug with the inscription "Make America Great Again" 
+or "I Voted for Biden (No Regrets)," and write: "I will no longer interfere in elections. 
+I promise to vote only once next time. Or twice. Maximum three."
 
-    If you do not unlock your computer within 5 minutes, your data will be forwarded to Joe Biden, 
-    Donald Trump, and Elon Musk. Even if you believe this is a mistake, write to Telegram anyway."""
+If you do not unlock your computer within 5 minutes, your data will be forwarded to Joe Biden, 
+Donald Trump, and Elon Musk. Even if you believe this is a mistake, write to Telegram anyway."""
 
     # Создание текста с помощью функции create_text_surface
     text_surface, text_rect = create_text_surface(
