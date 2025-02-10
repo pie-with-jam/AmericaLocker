@@ -19,11 +19,11 @@ jobs:
       with:
         python-version: '3.11.9'
 
-    - name: Activate virtual environment
+    - name: Install dependencies
       run: |
-        .\.venv\Scripts\activate
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
     - name: Build with PyInstaller
       run: |
-        .\.venv\Scripts\activate
         pyinstaller .\AmericaLocker.spec
