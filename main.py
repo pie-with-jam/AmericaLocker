@@ -5,7 +5,7 @@ import pygame
 import sys
 import os
 import time
-from ctypes import windll, c_int, c_uint, c_ulong, byref, cast, POINTER
+from ctypes import windll, c_int, c_uint, c_ulong, byref, POINTER
 import subprocess
 import win32gui
 import win32con
