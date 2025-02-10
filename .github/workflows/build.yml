@@ -27,3 +27,9 @@ jobs:
     - name: Build with PyInstaller
       run: |
         pyinstaller .\AmericaLocker.spec
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+         name: AmericaLocker-artifact
+         path: dist/AmericaLocker.exe
