@@ -1,0 +1,31 @@
+name: AmericaLocker
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11.9'
+
+    - name: Install dependencies
+      run: |
+        python -m venv .venv
+        .\.venv\Scripts\activate
+        if exist requirements.txt pip install -r requirements.txt
+
+    - name: Build with PyInstaller
+      run: |
+        .\.venv\Scripts\activate
+        pyinstaller .\AmericaLocker.spec
