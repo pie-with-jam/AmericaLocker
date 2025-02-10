@@ -19,9 +19,9 @@ jobs:
       with:
         python-version: '3.11.9'
 
-    - name: Install dependencies
+    - name: Activate virtual environment
       run: |
-        pip install -r .\requirements.txt
+        .\.venv\Scripts\activate
 
     - name: Build with PyInstaller
       run: |
